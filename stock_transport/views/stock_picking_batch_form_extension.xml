@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_stock_picking_batch_form_extension" model="ir.ui.view">
+        <field name="name">stock.picking.batch.form.extension</field>
+        <field name="model">stock.picking.batch</field>
+        <field name="inherit_id" ref="stock_picking_batch.stock_picking_batch_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[field[@name='scheduled_date']]" position="before">
+                <group>
+                    <field name="dock_id" placeholder="Dock"/>
+                    <field name="vehicle_id" placeholder="Third Party Provider"/>
+                    <field name="vehicle_category_id" placeholder="Semi-truck"/>
+                    <field name="weight" string="Weight" invisible="not vehicle_category_id" widget="progressbar"/>
+                    <field name="volume" string="Volume" invisible="not vehicle_category_id" widget="progressbar"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Modifying the tree view  -->
+    <record id="view_stock_picking_tree_extension" model="ir.ui.view">
+        <field name="name">stock.picking.tree.extension</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.vpicktree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='origin']" position="after">
+                <field name="volume"/>
+                <field name="weight" />
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Action modification  -->
+    <record id="stock_picking_batch.stock_picking_batch_action" model="ir.actions.act_window">
+        <field name="name">Batch Transfers</field>
+        <field name="res_model">stock.picking.batch</field>
+        <field name="view_mode">tree,kanban,form,graph,gantt</field>
+    </record>
+
+    <!-- Graph View  -->
+    <record id="view_stock_picking_batch_graph" model="ir.ui.view">
+        <field name="name">stock.picking.batch.graph</field>
+        <field name="model">stock.picking.batch</field>
+        <field name="arch" type="xml">
+            <graph string="Picking Batch Graph" type="bar">
+                <field name="scheduled_date"/>
+                <field name="vehicle_category_id"/>
+                <field name="weight" type="measure" />
+                <field name="volume" type="measure" />
+            </graph>
+        </field>
+    </record>
+
+    <!-- Gantt View  -->
+    <record id="view_stock_picking_batch_gantt" model="ir.ui.view">
+        <field name="name">stock.picking.batch.gantt</field>
+        <field name="model">stock.picking.batch</field>
+        <field name="arch" type="xml">
+            <gantt
+                string="Gantt View"
+                default_group_by='dock_id,vehicle_id'
+                date_start="date_from"
+                date_stop="date_to"
+                default_scale="week"
+                color = "id"
+                sample="1"
+                decoration-info="state in ['draft']">
+                <field name="name"/>
+                <field name="state"/>
+                <field name="weight" string="Weight"/>
+                <field name="volume" string="Volume"/>
+            </gantt>
+        </field>
+    </record>
+</odoo>
