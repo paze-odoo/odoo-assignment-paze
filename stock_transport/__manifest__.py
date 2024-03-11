@@ -6,7 +6,7 @@
     'author': "Odoo",
     'category': 'fleet',
     'version': '0.1',
-    'depends': ['base', 'fleet', 'stock_picking_batch', 'stock'],
+    'depends': ['fleet', 'stock_picking_batch'],
     'license': 'LGPL-3',
     'data': [
         'security/ir.model.access.csv',
@@ -14,6 +14,7 @@
         'views/fleet_vehicle_model_views_extension.xml',
         'views/stock_picking_batch_form_extension.xml',
     ],
+    'auto_install': True,
     'installable': True,
     'sequence': 1,
 }

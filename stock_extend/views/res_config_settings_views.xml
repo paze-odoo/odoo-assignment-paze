@@ -9,7 +9,7 @@
             <xpath expr="//app[@name='stock']/block[@name='shipping_setting_container']" position="inside">
                 <setting>
                     <field name='module_stock_transport' />
-                    <div class="row mt-2">
+                    <div class="row">
                         <div>
                             <div class="text-muted">Transport management: organsise packs in your fleet, or carriers.</div>
                         </div>

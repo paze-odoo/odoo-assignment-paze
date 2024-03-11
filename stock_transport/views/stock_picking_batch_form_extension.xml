@@ -1,23 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="view_stock_picking_batch_form_extension" model="ir.ui.view">
-        <field name="name">stock.picking.batch.form.extension</field>
-        <field name="model">stock.picking.batch</field>
-        <field name="inherit_id" ref="stock_picking_batch.stock_picking_batch_form"/>
-        <field name="arch" type="xml">
-            <xpath expr="//group[field[@name='scheduled_date']]" position="before">
-                <group>
-                    <field name="dock_id" placeholder="Dock"/>
-                    <field name="vehicle_id" placeholder="Third Party Provider"/>
-                    <field name="vehicle_category_id" placeholder="Semi-truck"/>
-                    <field name="weight" string="Weight" invisible="not vehicle_category_id" widget="progressbar"/>
-                    <field name="volume" string="Volume" invisible="not vehicle_category_id" widget="progressbar"/>
-                </group>
-            </xpath>
-        </field>
-    </record>
-
-    <!-- Modifying the tree view  -->
+     <!-- Modifying the tree view of picking_ids -->
     <record id="view_stock_picking_tree_extension" model="ir.ui.view">
         <field name="name">stock.picking.tree.extension</field>
         <field name="model">stock.picking</field>
@@ -37,6 +20,38 @@
         <field name="view_mode">tree,kanban,form,graph,gantt</field>
     </record>
 
+    <!-- Form View  -->
+    <record id="view_stock_picking_batch_form_extension" model="ir.ui.view">
+        <field name="name">stock.picking.batch.form.extension</field>
+        <field name="model">stock.picking.batch</field>
+        <field name="inherit_id" ref="stock_picking_batch.stock_picking_batch_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[field[@name='scheduled_date']]" position="before">
+                <group>
+                    <field name="dock_id" placeholder="Dock"/>
+                    <field name="vehicle_id" placeholder="Third Party Provider"/>
+                    <field name="vehicle_category_id" placeholder="Semi-truck"/>
+                    <div invisible="not vehicle_category_id">
+                    <div class="d-flex" style="width:1rem">
+                        <span style="margin-right: 13rem">Weight</span>
+                        <div class="d-flex">
+                            <field name="total_weight" string="Weight" class="me-2"/>
+                            <field name="weight_percentage" string="" widget="progressbar"/>
+                        </div>
+                    </div>
+                    <div class="d-flex" style="width:15rem">
+                        <span style="margin-right: 13rem">Volume</span>
+                        <div class="d-flex">
+                            <field name="total_volume" string="Volume" class="me-2"/>
+                            <field name="volume_percentage" string="" widget="progressbar"/>
+                        </div>
+                    </div>
+                </div>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
     <!-- Graph View  -->
     <record id="view_stock_picking_batch_graph" model="ir.ui.view">
         <field name="name">stock.picking.batch.graph</field>
@@ -45,8 +60,10 @@
             <graph string="Picking Batch Graph" type="bar">
                 <field name="scheduled_date"/>
                 <field name="vehicle_category_id"/>
-                <field name="weight" type="measure" />
-                <field name="volume" type="measure" />
+                <field name="weight_percentage" type="measure" />
+                <field name="volume_percentage" type="measure" />
+                <field name="total_weight" invisible="1" />
+                <field name="total_volume" invisible="1" />
             </graph>
         </field>
     </record>
@@ -59,16 +76,16 @@
             <gantt
                 string="Gantt View"
                 default_group_by='dock_id,vehicle_id'
-                date_start="date_from"
-                date_stop="date_to"
-                default_scale="week"
+                date_start="scheduled_date"
+                date_stop="date_end"
+                default_scale="year"
                 color = "id"
                 sample="1"
                 decoration-info="state in ['draft']">
                 <field name="name"/>
                 <field name="state"/>
-                <field name="weight" string="Weight"/>
-                <field name="volume" string="Volume"/>
+                <field name="weight_percentage" string="Weight"/>
+                <field name="volume_percentage" string="Volume"/>
             </gantt>
         </field>
     </record>
